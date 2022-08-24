@@ -11,22 +11,25 @@
 </head>
 <body>
     <div class="login-page">
-        <img src="https://bp.imguol.com/logo/logo.png" alt="Logo do chat da UOL">
+        <img src="https://bp.imguol.com/logo/logo.png" alt="Logo do chat da UOL" class="top">
         <div class="login-input-show">
             <input type="text" placeholder="Digite seu nome">
             <button onclick="enterChat()">Entrar</button>
         </div>
-        <div class="hidden">
+        <div class="loading hidden">
             <img class="top-margin" src="https://i.pinimg.com/originals/78/e8/26/78e826ca1b9351214dfdd5e47f7e2024.gif" alt="Carregamento em andamento">
             <h1>Entrando...</h1>
         </div>
     </div>
+
     <div class="main-page hidden">
         <div class="header">
             <img src="https://bp.imguol.com/logo/logo.png" alt="Logo do chat da UOL">
             <button onclick="displaySidebar()"><ion-icon name="people-sharp"></ion-icon></button>
         </div>
+
         <div class="chat"></div>
+
         <div class="chat-input">
             <input type="text" placeholder="Escreva aqui...">
             <button><ion-icon name="paper-plane-outline"></ion-icon></button>
