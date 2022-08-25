@@ -4,6 +4,9 @@ let participants = [];
 let nome = '';
 let statusUpdate = undefined;
 const scrollToBottom = document.querySelector('.chat');
+let selectedContact = document.querySelector('.contacts > .selected');
+let selectedVisibility = document.querySelector('.visibilities > .selected');
+let messageToSend = {from: '', to: '', text: '', type: ''};
 
 function enterChat(){
     nome = {name: document.querySelector('.login-page input').value};
@@ -79,7 +82,7 @@ function scrollBottom(element) {
 function loadingNewMessagesFailed(promisse){
     alert('Houve uma falha no carregamento das mensagens, você será redirecionado à página inicial');
     console.log('Falaha ao carregar novas mensagens');
-    toggleLoginPage();
+    window.location.reload();
 }
 
 function statusPost(){
@@ -89,33 +92,32 @@ function statusPost(){
 
 function statusFailed(promisse){
     statusUpdate.clearInterval();
-    toggleLoginPage();
+    alert('Falha ao enviar status para o servidor, você será redirecionado à página inicial');
+    window.location.reload();
 }
 
 function loadingMessagesFailed(promisse){
     alert('Houve uma falha no carregamento das mensagens, você será redirecionado à página inicial');
-    toggleLoginPage();
+    window.location.reaload();
     console.log('Falha ao carregar as mensagens');
-    clearInterval(statusUpdate);
 }
 
 function requestParticipants(promisse){
     messages = promisse.data;
     console.log(messages);
     const participantsPromisse = axios.get('https://mock-api.driven.com.br/api/v6/uol/participants');
-    participantsPromisse.then(renderChat);
+    participantsPromisse.then(render);
     participantsPromisse.catch(loadingParticipantsFailed);
     console.log('Mensagens recebidas com sucesso');
 }
 
 function loadingParticipantsFailed(promisse){
     alert('Houve uma falha no carregamento dos participantes do chat, você será redirecionado à página inicial');
-    toggleLoginPage();
+    window.location.reload();
     console.log('Falaha ao carregar os participantes');
-    clearInterval(statusUpdate);
 }
 
-function renderChat(promisse){
+function render(promisse){
     participants = promisse.data;
     console.log('Participantes carregados com sucesso');
     document.querySelector('.login-page .loading').classList.add('hidden');
@@ -123,49 +125,53 @@ function renderChat(promisse){
     for (let i = 0; i < messages.length; i++){
         createMessageElement(messages[i]);
     }
+    for (let i = 0; i < participants.length; i++){
+        createParticipantElement(participants[i]);
+    }
     scrollBottom(scrollToBottom);
     setInterval(addChat, 3000);
+    setInterval(participantsControl, 5000);
 }
 
 
 function createMessageElement(message){
-    let chat = document.querySelector('.chat');
-    let messageElement = document.createElement('div');
+    const chat = document.querySelector('.chat');
+    const messageElement = document.createElement('div');
     messageElement.classList.add('message');
-    let timeElement = document.createElement('h1');
+    const timeElement = document.createElement('h1');
     timeElement.innerHTML = `(${message.time})`;
     messageElement.appendChild(timeElement);
-    let messageSender = document.createElement('h2');
+    const messageSender = document.createElement('h2');
     messageSender.innerHTML = `${message.from}`;
     messageElement.appendChild(messageSender);
     if (message.type === 'status'){
-        let statusMessage = document.createElement('h3');
+        const statusMessage = document.createElement('h3');
         statusMessage.innerHTML = `${message.text}`;
         messageElement.appendChild(statusMessage);
         messageElement.classList.add('grey');
         chat.appendChild(messageElement);
     }
     else if (message.type === 'message'){
-        let joiningText = document.createElement('h3');
+        const joiningText = document.createElement('h3');
         joiningText.innerHTML = `para`;
         messageElement.appendChild(joiningText);
-        let messageRecipient = document.createElement('h2');
+        const messageRecipient = document.createElement('h2');
         messageRecipient.innerHTML = `${message.to}:`;
         messageElement.appendChild(messageRecipient);
-        let messageContent = document.createElement('p');
+        const messageContent = document.createElement('p');
         messageContent.innerHTML = `${message.text}`;
         messageElement.appendChild(messageContent);
         messageElement.classList.add('white');
         chat.appendChild(messageElement);
     }
-    else if (message.type === 'private_message' && (message.to === nome || message.from === nome)){
-        let joiningText = document.createElement('h3');
+    else if (message.type === 'private_message' && (message.to === nome.name || message.from === nome.name)){
+        const joiningText = document.createElement('h3');
         joiningText.innerHTML = `reservadamente para`;
         messageElement.appendChild(joiningText);
-        let messageRecipient = document.createElement('h2');
+        const messageRecipient = document.createElement('h2');
         messageRecipient.innerHTML = `${message.to}:`;
         messageElement.appendChild(messageRecipient);
-        let messageContent = document.createElement('p');
+        const messageContent = document.createElement('p');
         messageContent.innerHTML = `${message.text}`;
         messageElement.appendChild(messageContent);
         messageElement.classList.add('pink');
@@ -188,3 +194,102 @@ messageInput.addEventListener("keypress", function(event) {
         document.querySelector('.chat-input > button').click();
     }
 });
+
+function toggleSidebar(){
+    document.querySelector('.sidebar').classList.toggle('hidden');
+    document.querySelector('.blur').classList.toggle('hidden');
+    document.querySelector('.blur').classList.toggle('block');
+}
+
+function selectContact(newSelected){
+    if (selectedContact === newSelected){
+        return;
+    }
+    const selectedCheckmark = selectedContact.querySelector('.check');
+    const newCheckmark = newSelected.querySelector('.hidden');
+    selectedContact.classList.remove('selected');
+    selectedCheckmark.classList.remove('check');
+    selectedCheckmark.classList.add('hidden');
+    newSelected.classList.add('selected');
+    newCheckmark.classList.remove('hidden');
+    newCheckmark.classList.add('check');
+    selectedContact = newSelected;
+}
+
+function selectVisibility(newSelected){
+    if (selectedVisibility === newSelected){
+        return;
+    }
+    const selectedCheckmark = selectedVisibility.querySelector('.check');
+    const newCheckmark = newSelected.querySelector('.hidden');
+    selectedVisibility.classList.remove('selected');
+    selectedCheckmark.classList.remove('check');
+    selectedCheckmark.classList.add('hidden');
+    newSelected.classList.add('selected');
+    newCheckmark.classList.remove('hidden');
+    newCheckmark.classList.add('check');
+    selectedVisibility = newSelected;
+}
+
+function createParticipantElement(participant){
+    const contacts = document.querySelector('.contacts');
+    const participantElement = document.createElement('div');
+    participantElement.classList.add('contact');
+    participantElement.setAttribute('onclick', 'selectContact(this)');
+    const divElement = document.createElement('div');
+    const mainIconElement = document.createElement('ion-icon');
+    mainIconElement.setAttribute('name', 'people-sharp');
+    divElement.appendChild(mainIconElement);
+    const name = document.createElement('h2');
+    name.innerHTML = `${participant.name}`;
+    divElement.appendChild(name);
+    participantElement.appendChild(divElement);
+    const checkmark = document.createElement('ion-icon');
+    checkmark.setAttribute('name', 'checkmark-sharp');
+    checkmark.classList.add('hidden');
+    participantElement.appendChild(checkmark);
+    contacts.appendChild(participantElement);
+}
+
+function sendMessage(){
+    if (document.querySelector('.chat-input input').value !== ''){
+        messageToSend.from = nome.name;
+        messageToSend.to = selectedContact.querySelector('h2').innerHTML;
+        messageToSend.text = document.querySelector('.chat-input input').value;
+        if (selectedVisibility.querySelector('h2').innerHTML === 'Pública'){
+            messageToSend.type = 'message';
+        }
+        else{
+            messageToSend.type = 'private_message';
+        }
+        const sentMessage = axios.post('https://mock-api.driven.com.br/api/v6/uol/messages', messageToSend);
+        sentMessage.then(resetMessage);
+    }
+}
+
+function resetMessage(promisse){
+    document.querySelector('.chat-input input').value = '';
+    addChat();
+}
+
+function participantsControl(){
+    const newParticipants = axios.get('https://mock-api.driven.com.br/api/v6/uol/participants');
+    newParticipants.then(renderParticipants);
+    newParticipants.catch(loadingNewParticipantsFailed);
+}
+
+function loadingNewParticipantsFailed(){
+    alert('Falha ao recarregar os usuários do chat, você será redirecionado à página inicial');
+    window.location.reload();
+}
+
+function renderParticipants(promisse){
+    const contactsToRemove = document.querySelectorAll('.contact');
+    for (let i = participants.length - 1; i > 0; i--){
+        contactsToRemove[i].remove();
+    }
+    participants = promisse.data;
+    for (let i = 0; i < participants.length; i++){
+        createParticipantElement(participants[i]);
+    }
+}

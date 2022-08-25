@@ -25,14 +25,45 @@
     <div class="main-page hidden">
         <div class="header">
             <img src="https://bp.imguol.com/logo/logo.png" alt="Logo do chat da UOL">
-            <button onclick="displaySidebar()"><ion-icon name="people-sharp"></ion-icon></button>
+            <button onclick="toggleSidebar()"><ion-icon name="people-sharp"></ion-icon></button>
         </div>
 
         <div class="chat"></div>
 
         <div class="chat-input">
             <input type="text" placeholder="Escreva aqui...">
-            <button><ion-icon name="paper-plane-outline"></ion-icon></button>
+            <button onclick="sendMessage()"><ion-icon name="paper-plane-outline"></ion-icon></button>
+        </div>
+    </div>
+
+    <div class="blur hidden" onclick="toggleSidebar()"></div>
+    <div class="sidebar hidden">
+        <h1>Escolha um contato para enviar mensagem:</h1>
+        <div class="contacts">
+            <div class="contact selected" onclick="selectContact(this)">
+                <div>
+                    <ion-icon name="people-sharp"></ion-icon>
+                    <h2>Todos</h2>
+                </div>
+                <ion-icon name="checkmark-sharp" class="check"></ion-icon>
+            </div>
+        </div>
+        <h1>Escolha a visiblidade da mensagem:</h1>
+        <div class="visibilities">
+            <div class="visibility selected" onclick="selectVisibility(this)">
+                <div>
+                    <ion-icon name="lock-open"></ion-icon>
+                    <h2>Pública</h2>
+                </div>
+                <ion-icon name="checkmark-sharp" class="check"></ion-icon>
+            </div>
+            <div class="visibility" onclick="selectVisibility(this)">
+                <div>
+                    <ion-icon name="lock-closed"></ion-icon>
+                    <h2>Reservada</h2>
+                </div>
+                <ion-icon name="checkmark-sharp" class="hidden"></ion-icon>
+            </div>
         </div>
     </div>
     <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
