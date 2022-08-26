@@ -10,14 +10,11 @@ let messageToSend = {from: '', to: '', text: '', type: ''};
 
 function enterChat(){
     nome = {name: document.querySelector('.login-page input').value};
-    if (nome.name !== '' && nome.name.length >= 3){
+    if (nome.name !== ''){
         const promisse = axios.post('https://mock-api.driven.com.br/api/v6/uol/participants', nome);
         toggleLoginPage();
         promisse.then(intervalControl);
         promisse.catch(resetLoginPage);
-    }
-    else if (nome.name !== ''){
-        alert('Seu nome tem que possuir pelo menos 3 caracteres');
     }
     else{
         alert('Insira um nome para entrar no Chat');
