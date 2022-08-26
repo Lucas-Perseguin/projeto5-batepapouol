@@ -126,11 +126,14 @@ function render(promisse){
         createMessageElement(messages[i]);
     }
     for (let i = 0; i < participants.length; i++){
+        if (participants[i].name === nome.name){
+            continue;
+        }
         createParticipantElement(participants[i]);
     }
     scrollBottom(scrollToBottom);
     setInterval(addChat, 3000);
-    setInterval(participantsControl, 5000);
+    setInterval(participantsControl, 10000);
 }
 
 
@@ -262,6 +265,10 @@ function sendMessage(){
         else{
             messageToSend.type = 'private_message';
         }
+        if (messageToSend.to === 'Todos' && messageToSend.type === 'private_message'){
+            alert('Você não pode enviar mensagens reservadas para todos os participantes!');
+            return;
+        }
         const sentMessage = axios.post('https://mock-api.driven.com.br/api/v6/uol/messages', messageToSend);
         sentMessage.then(resetMessage);
     }
@@ -284,12 +291,20 @@ function loadingNewParticipantsFailed(){
 }
 
 function renderParticipants(promisse){
-    const contactsToRemove = document.querySelectorAll('.contact');
-    for (let i = participants.length - 1; i > 0; i--){
-        contactsToRemove[i].remove();
+    let renderedContacts = document.querySelectorAll('.contact');
+    let selectedName = '';
+    for (let i = renderedContacts.length - 1; i > 0; i--){
+        if (renderedContacts[i].classList.contains('selected')){
+            selectedName = renderedContacts[i].querySelector('h2').innerHTML;
+            continue;
+        }
+        renderedContacts[i].remove();
     }
     participants = promisse.data;
     for (let i = 0; i < participants.length; i++){
+        if (participants[i].name === nome.name || participants[i].name === selectedName){
+            continue;
+        }
         createParticipantElement(participants[i]);
     }
 }
