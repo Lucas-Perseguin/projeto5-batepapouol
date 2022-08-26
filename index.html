@@ -11,7 +11,7 @@
 </head>
 <body>
     <div class="login-page">
-        <img src="https://bp.imguol.com/logo/logo.png" alt="Logo do chat da UOL" class="top">
+        <img src="https://bp.imguol.com/logo/logo.png" alt="Logo do chat da UOL" class="top" onclick="window.location.reload()">
         <div class="login-input-show">
             <input type="text" placeholder="Digite seu nome">
             <button onclick="enterChat()">Entrar</button>
@@ -24,7 +24,7 @@
 
     <div class="main-page hidden">
         <div class="header">
-            <img src="https://bp.imguol.com/logo/logo.png" alt="Logo do chat da UOL">
+            <img src="https://bp.imguol.com/logo/logo.png" alt="Logo do chat da UOL" onclick="window.location.reload()">
             <button onclick="toggleSidebar()"><ion-icon name="people-sharp"></ion-icon></button>
         </div>
 
@@ -53,14 +53,14 @@
         </div>
         <h1>Escolha a visiblidade da mensagem:</h1>
         <div class="visibilities">
-            <div class="visibility selected" onclick="selectVisibility(this)">
+            <div class="visibility selected" onclick="selectVisibility(this)" data-identifier="visibility">
                 <div>
                     <ion-icon name="lock-open"></ion-icon>
                     <h2>Pública</h2>
                 </div>
                 <ion-icon name="checkmark-sharp" class="check"></ion-icon>
             </div>
-            <div class="visibility" onclick="selectVisibility(this)">
+            <div class="visibility" onclick="selectVisibility(this)" data-identifier="visibility">
                 <div>
                     <ion-icon name="lock-closed"></ion-icon>
                     <h2>Reservada</h2>

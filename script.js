@@ -245,6 +245,7 @@ function createParticipantElement(participant){
     const participantElement = document.createElement('div');
     participantElement.classList.add('contact');
     participantElement.setAttribute('onclick', 'selectContact(this)');
+    participantElement.setAttribute('data-identifier', 'participant')
     const divElement = document.createElement('div');
     const mainIconElement = document.createElement('ion-icon');
     mainIconElement.setAttribute('name', 'people-sharp');
