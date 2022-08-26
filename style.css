@@ -89,6 +89,9 @@ body{
     line-height: 54px;
     text-align: center;
 }
+.login-page input:focus{
+    outline: 2px solid #000000;
+}
 .login-page button{
     height: 45px;
     width: 109px;
@@ -182,6 +185,12 @@ body{
     text-align: start;
     border: none;
 }
+.chat-input input:focus{
+    outline: none;
+}
+.chat-input >:first-child{
+    width: calc(100vw - (17px + 27px + 15px + 26px));
+}
 .chat-input ion-icon{
     width: 26px;
     height: 26px;
@@ -191,6 +200,11 @@ body{
     height: 26px;
     background: none;
     border: none;
+}
+.chat-input h1{
+    font-weight: 300;
+    font-size: 14px;
+    color: #505050;
 }
 /*!End of Chat Input*/
 

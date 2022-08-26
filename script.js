@@ -122,6 +122,7 @@ function render(promisse){
     console.log('Participantes carregados com sucesso');
     document.querySelector('.login-page .loading').classList.add('hidden');
     document.querySelector('.main-page').classList.remove('hidden');
+    setMessageDescription();
     for (let i = 0; i < messages.length; i++){
         createMessageElement(messages[i]);
     }
@@ -136,6 +137,9 @@ function render(promisse){
     setInterval(participantsControl, 10000);
 }
 
+function setMessageDescription(){
+    document.querySelector('.chat-input h1').innerHTML = `Enviando para ${selectedContact.querySelector('h2').innerHTML} (${selectedVisibility.querySelector('h2').innerHTML})`;
+}
 
 function createMessageElement(message){
     const chat = document.querySelector('.chat');
@@ -190,7 +194,7 @@ loginInput.addEventListener("keypress", function(event) {
     }
 });
 
-const messageInput = document.querySelector('.chat-input > input');
+const messageInput = document.querySelector('.chat-input input');
 messageInput.addEventListener("keypress", function(event) {
     if (event.key === "Enter") {
         event.preventDefault();
@@ -217,6 +221,7 @@ function selectContact(newSelected){
     newCheckmark.classList.remove('hidden');
     newCheckmark.classList.add('check');
     selectedContact = newSelected;
+    setMessageDescription();
 }
 
 function selectVisibility(newSelected){
@@ -232,6 +237,7 @@ function selectVisibility(newSelected){
     newCheckmark.classList.remove('hidden');
     newCheckmark.classList.add('check');
     selectedVisibility = newSelected;
+    setMessageDescription();
 }
 
 function createParticipantElement(participant){
@@ -259,6 +265,7 @@ function sendMessage(){
         messageToSend.from = nome.name;
         messageToSend.to = selectedContact.querySelector('h2').innerHTML;
         messageToSend.text = document.querySelector('.chat-input input').value;
+        resetMessage();
         if (selectedVisibility.querySelector('h2').innerHTML === 'Pública'){
             messageToSend.type = 'message';
         }
@@ -270,7 +277,6 @@ function sendMessage(){
             return;
         }
         const sentMessage = axios.post('https://mock-api.driven.com.br/api/v6/uol/messages', messageToSend);
-        sentMessage.then(resetMessage);
     }
 }
 
