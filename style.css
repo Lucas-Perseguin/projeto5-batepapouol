@@ -51,6 +51,7 @@ body{
 }
 .message p{
     margin-left: 4px;
+    word-wrap: break-word;
 }
 .block{
     display: block;
